@@ -20,6 +20,11 @@ private:
     bool is_directed = false;
 
 public:
+    TV getDataById(string id) {
+        int index = vertexes[id];
+        return data[index];
+    }
+
     Graph(bool directed = false){
         is_directed = directed;
     }
@@ -59,7 +64,7 @@ public:
    
    
     */
-    
+
     friend Graph<TV,TE> Kruskal(Graph<TV,TE> g);
     friend Graph<TV,TE> Prim(Graph<TV,TE> g);
     friend void Dijkstra(Graph<TV,TE> g);

@@ -5,6 +5,7 @@
 #include "graph.h"
 #include <fstream>
 #include <utility>
+#include <cmath>
 using json = nlohmann::json;
 
 
@@ -17,13 +18,14 @@ public:
     Parser(string dir_){data = nullptr; dir = std::move(dir_);}
     void clear(); // Clears parser saved atributes
     void readJSON(); // Parses JSON file and saves data into class NOTE: each derived class has its own readJSON method
-    void GraphMake(Graph<string, double> &tempGraph); // Adds the parsed data into the specified undirected graph
-    void set_dir(string dir_){dir = std::move(dir_)}
+    template<typename TV, typename TE>
+    void GraphMake(Graph<TV,TE> &tempGraph); // Adds the parsed data into the specified undirected graph
+    void set_dir(string dir_){dir = std::move(dir_);}
 };
 
 void Parser::readJSON() {
     if(dir.empty()) return;
-    std::ifstream i(dir)        //lee el json
+    std::ifstream i(dir);       //lee el json
     auto temp = json::parse(i); //convierte el archivo json a
     data = new json;
     *data = temp;
@@ -35,13 +37,23 @@ void Parser::clear() {
 }
 
 template<typename TV, typename TE>
-void Parser::GraphMake(Graph<string ,double> &tempGraph) {
+void Parser::GraphMake(Graph<TV ,TE> &tempGraph) {
     if(data == nullptr) return;
+    json temp;
+    double dist;
     for(auto & i : *data) {
         tempGraph.insertVertex(i["Airport ID"],i);
-        for(int j = 0; j < i["destinations"].size(); ++j)
-            tempGraph.createEdge(i["Airport ID"], i["destinations"][j], 5);
     }
+    for(auto & i : *data) {
+        for(int j = 0; j < i["destinations"].size(); ++j) {
+            temp = tempGraph.getDataById(i["destinations"][j]);
+            dist = sqrt(pow( temp["Longitude"].template get<TE>() - i["Longitude"].template get<TE>(),2) +pow( temp["Latitude"].template get<TE>() - i["Latitude"].template get<TE>(),2));
+            tempGraph.createEdge(i["Airport ID"], i["destinations"][j], dist);
+        }
+    }
+
+
+
 }
 
 
