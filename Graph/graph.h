@@ -19,7 +19,7 @@ private:
     vector< vector< pair<int,int> > > adj; // lista de adjacencia (numero vecino, id de la arista)
     bool is_directed = false;
 
-public:    
+public:
     Graph(bool directed = false){
         is_directed = directed;
     }
@@ -58,13 +58,13 @@ public:
     
     
     friend Graph<TV,TE> Kruskal(Graph<TV,TE> g);
-    
+
     template<typename TV,typename TE>
     friend Graph<TV,TE> Prim(Graph<TV,TE> g);
     
     template<typename TV,typename TE>
     friend void Dijkstra(Graph<TV,TE> g);
-    
+
     template<typename TV,typename TE>
     friend void Astar(Graph<TV,TE> g);
 };
