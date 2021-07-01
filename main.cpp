@@ -11,6 +11,8 @@ int main(int argc, char *argv[]) {
     std::cout << "MENU GRAPH TESTER" << std::endl;
     std::cout << "================================================" << std::endl;
      
+    int* a = new int;
+    *a = 3;
 
      
  //   Tester::executeExamples();

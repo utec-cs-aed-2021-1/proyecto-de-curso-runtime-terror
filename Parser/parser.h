@@ -24,18 +24,19 @@ void Parser::readJSON() {
     if(dir.empty()) return;
     std::string jsonname = dir;
     std::ifstream i(jsonname)
-    data* = json::parse(i);
+    auto temp = json::parse(i);
+    data = new json;
+    *data = temp;
 }
 
 void Parser::clear() {
-    delete data;
     data = nullptr;
 }
 
 template<typename TV, typename TE>
 void Parser::GraphMake(Graph<string ,double> &tempGraph) {
     if(data == nullptr) return;
-    for(auto & i : data*) {
+    for(auto & i : *data) {
         tempGraph.insertVertex(i["Airport ID"],i);
         for(int j = 0; j < i["destinations"].size(); ++j)
             tempGraph.createEdge(i["Airport ID"], i["destinations"][j], 5);
