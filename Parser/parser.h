@@ -4,6 +4,7 @@
 #include "json.hpp"
 #include "graph.h"
 #include <fstream>
+#include <utility>
 using json = nlohmann::json;
 
 
@@ -13,20 +14,20 @@ private:
     string dir;
 public:
     Parser(){data = nullptr;}
-    Parser(string dir_){data = nullptr; dir = dir_;}
+    Parser(string dir_){data = nullptr; dir = std::move(dir_);}
     void clear(); // Clears parser saved atributes
     void readJSON(); // Parses JSON file and saves data into class NOTE: each derived class has its own readJSON method
     void GraphMake(Graph<string, double> &tempGraph); // Adds the parsed data into the specified undirected graph
-    void set_dir(string dir_){dir = dir_}
+    void set_dir(string dir_){dir = std::move(dir_)}
 };
 
 void Parser::readJSON() {
     if(dir.empty()) return;
-    std::string jsonname = dir;
-    std::ifstream i(jsonname)
-    auto temp = json::parse(i);
+    std::ifstream i(dir)        //lee el json
+    auto temp = json::parse(i); //convierte el archivo json a
     data = new json;
     *data = temp;
+    i.close();
 }
 
 void Parser::clear() {

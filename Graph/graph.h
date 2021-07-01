@@ -23,7 +23,7 @@ public:
     Graph(bool directed = false){
         is_directed = directed;
     }
-    bool insertVertex(string id, TV vertex){
+    bool insertVertex(const string& id, TV vertex){
         if(vertexes[id] != 0) return false;
         data.emplace_back(vertex);
         adj.emplace_back(vector<pair<int,int> > ());
@@ -33,19 +33,22 @@ public:
     }  
     bool createEdge(string id1, string id2, TE w){
 
-    }     
+    }
+    /*
     bool deleteVertex(string id) = 0;     
     bool deleteEdge(string id) = 0;   
     TE &operator()(string start, string end)= 0;  
     float density() = 0;
     bool isDense(float threshold = 0.5) = 0;
     bool isConnected()= 0;
+     */
     bool isStronglyConnected() {
         if(!is_directed) return false;
         // KOSARAJU ALGORITHM IS OVERKILL 
 
 
     }
+    /*
     bool empty();
     void clear()= 0;  
       
@@ -55,17 +58,11 @@ public:
 
    
    
-    
+    */
     
     friend Graph<TV,TE> Kruskal(Graph<TV,TE> g);
-
-    template<typename TV,typename TE>
     friend Graph<TV,TE> Prim(Graph<TV,TE> g);
-    
-    template<typename TV,typename TE>
     friend void Dijkstra(Graph<TV,TE> g);
-
-    template<typename TV,typename TE>
     friend void Astar(Graph<TV,TE> g);
 };
 
