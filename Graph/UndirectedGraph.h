@@ -5,7 +5,9 @@
 
 template<typename TV, typename TE>
 class UnDirectedGraph : public Graph<TV, TE>{
-
+public:
+	UnDirectedGraph(){};
+	~UnDirectedGraph(){};
 };
 
 #endif

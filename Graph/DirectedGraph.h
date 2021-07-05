@@ -5,7 +5,11 @@
 
 template<typename TV, typename TE>
 class DirectedGraph : public Graph<TV, TE>{
-
+public:
+    DirectedGraph(){
+       this -> is_directed = true;
+    };  
+    ~DirectedGraph(){};
 };
 
 #endif
