@@ -3,9 +3,9 @@
 --------
 
 ## Integrantes
-- 
-- 
-- 
+- Orosco Zavala, Gustavo Andres
+- Rincón Espinoza, Alberto Domenic
+- Domínguez Aspilcueta, Pedro Francisco
 
 ----
 
