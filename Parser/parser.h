@@ -5,6 +5,7 @@
 #include "graph.h"
 #include <fstream>
 #include <utility>
+#include <sstream>
 #include <cmath>
 using json = nlohmann::json;
 
@@ -47,15 +48,12 @@ void Parser::GraphMake(Graph<TV ,TE> &tempGraph) {
     for(auto & i : *data) {
         for(int j = 0; j < i["destinations"].size(); ++j) {
             temp = tempGraph.getDataById(i["destinations"][j]);
-            dist = sqrt(pow( temp["Longitude"].template get<TE>() - i["Longitude"].template get<TE>(),2) +pow( temp["Latitude"].template get<TE>() - i["Latitude"].template get<TE>(),2));
+            dist = sqrt(pow( convert_to<TE>(temp["Longitude"].template get<string>()) - convert_to<TE>(i["Longitude"].template get<string>()),2) + pow( convert_to<TE>(temp["Latitude"].template get<string>()) - convert_to<TE>(i["Latitude"].template get<string>()),2));
             tempGraph.createEdge(i["Airport ID"], i["destinations"][j], dist);
         }
     }
 
-
-
 }
-
 
 
 #endif //PROYECTO_DE_CURSO_RUNTIME_TERROR_PARSER_H

@@ -2,13 +2,30 @@
 #define GRAPH_H
 
 #include <bits/stdc++.h>
+#include <SFML/Graphics.hpp>
+#include "parser.h"
 
 using namespace std;
+using json = nlohmann::json;
+
+int scalar = 2;
+int centerx = 940;
+int centery = 450;
+
+template <typename T>
+T convert_to (const std::string &str) {
+    std::istringstream ss(str);
+    T num;
+    ss >> num;
+    return num;
+}
 
 template<typename TV, typename TE>
 class Graph{
 protected:
+    sf::RenderWindow* window;
     int cur_vertex = 0, cur_edge = 0;
+
     vector<TV> data; // data[i] = data del i-esimo vertice
     vector<TE> weight; // weight[i] = peso de la i-esima arista 
     map< pair<int,int> , int> num_edges; // dado un par de vertices devuelve el numero de la arista
@@ -18,6 +35,21 @@ protected:
     bool is_directed = false;
 
 public:
+    void size() {
+        cout << data.size() << endl;
+        cout << weight.size();
+    }
+    bool is_directed2() {return is_directed;}
+
+    template <typename VT,typename ET> friend vector<int> dfs_graph(Graph<VT,ET>& graph);
+    template <typename VT,typename ET> friend vector<int> bfs_graph(Graph<VT,ET>& graph, int root);
+
+    template <typename VT,typename ET> friend vector<ET> dijkstra(Graph<VT,ET>& graph, TE inf, int root);
+    template <typename VT,typename ET> friend Graph<VT,ET> kruskal(Graph<VT,ET>& graph);
+    template <typename VT,typename ET> friend Graph<VT,ET> prim(Graph<VT,ET>& graph, ET inf);
+
+    Graph(sf::RenderWindow* wnd, bool directed = false ): window{wnd}{is_directed = directed;}
+
     TV getDataById(string id) {
         int index = vertexes[id];
         return data[index];
@@ -25,6 +57,19 @@ public:
 
     Graph(bool directed = false){
         is_directed = directed;
+    }
+
+    Graph<TV,TE>& operator = (const Graph<TV,TE>& another) {
+        this->cur_vertex = another.cur_vertex;
+        this->cur_edge = another.cur_edge;
+        this->data = another.data;
+        this->weight = another.weight;
+        this->num_edges = another.num_edges;
+        this->names = another.names;
+        this->vertexes = another.vertexes;
+        this->adj = another.adj;
+        this->is_directed = another.is_directed;
+        return *this;
     }
 
 
@@ -59,6 +104,7 @@ public:
    
         return true;
     }
+
     bool deleteVertex(string id){
         if(vertexes.find(id) == vertexes.end()) return false;
         int ver = vertexes[id];
@@ -172,149 +218,28 @@ public:
     bool findById(string id){
         return vertexes.find(id) != vertexes.end();
     }
-    void display(){
-        // ¿Que se muestra? 
+    void display() {
+        for(int i = 0; i < data.size(); ++i) {
+            for (int j = 0; j < adj[i].size(); ++j) {
+                json temp1 = data[i];
+                json temp2 = data[adj[i][j].first];
+                sf::Vertex line[] = {
+                        sf::Vertex(sf::Vector2f(convert_to<double>(temp1["Longitude"].template get<string>())*scalar+centerx, convert_to<double>(temp1["Latitude"].template get<string>())*scalar+centery)),
+                        sf::Vertex(sf::Vector2f(convert_to<double>(temp2["Longitude"].template get<string>())*scalar+centerx, convert_to<double>(temp2["Latitude"].template get<string>())*scalar+centery))
+                };
+                window->draw(line, 2, sf::Lines);
+            }
+        }
+
+        for (auto &p: data) {
+            sf::CircleShape shape(5);
+            shape.setFillColor(sf::Color::Green);
+            shape.setPosition(convert_to<double>(p["Longitude"].template get<string>()) * scalar+centerx,
+                              convert_to<double>(p["Latitude"].template get<string>()) * scalar+centery);
+            window->draw(shape);
+        }
     }
 
-   
-
-    vector<int> dfs_graph(){
-        vector<bool> vis(cur_vertex,false);
-        vector<int> order;
-        function <void(int)> dfs = [&](int u){
-            vis[u] = true;
-            order.push_back(u);
-            for(auto v:adj[u]){
-                if(!vis[v.first]) dfs(v.first);
-            }
-        };
-        for(int i = 0; i < cur_vertex; i++) 
-            if(!vis[i]) dfs(i);
-        return order;
-    }
-
-    vector<int> bfs_graph(int root = 0){
-        vector<bool> vis(cur_vertex,false);
-        vector<int> order;
-        vis[root] = true;
-        queue<int> q;
-        while(!q.empty()){
-            int u = q.front();
-            order.push_back(u);
-            for(auto v:adj[u]){
-                if(!vis[v.first]){
-                    vis[v.first] = true;
-                    q.push(v.first);
-                }
-            }
-        }
-        return order;
-    }
-
-    vector<TE> dijkstra(TE inf, int root = 0){
-        vector<TE> dis(cur_vertex);
-        priority_queue< pair<TE,int> , vector< pair<TE,int> >, greater< pair<TE,int> > > q;
-        for(int i = 0; i < cur_vertex; i++) dis[i] = inf; // TIPO DE DATO?
-        dis[root] = 0;
-        q.push({0,root});
-        while(!q.empty()){
-            auto aux = q.top();
-            q.pop();
-            int u = aux.second;
-            if(dis[u] < aux.first) continue;             
-            for(auto v:adj[u]){
-                if(dis[v.first] > dis[u] + weight[v.second]){
-                    dis[v.first] = dis[u] + weight[v.second];
-                    q.push({dis[v.first],v.first} );
-                }
-            }
-        }
-
-        return dis;
-    }
-
-    Graph<TV,TE> kruskal(){
-        if(is_directed) return Graph<TV,TE>();
-        int n = cur_vertex;
-        // DSU
-        vector<int> parent(n);
-        for(int i = 0; i < n; i++) parent[i] = i;
-        function<int(int)> find = [&](int u){
-            return (parent[u] == u? u: parent[u] = find(parent[u]));
-        };
-        function<bool(int,int)> uni = [&](int u,int v){
-            u = find(u), v = find(v);
-            if(u == v) return false;
-            parent[v] = u;
-            return true;
-        };
-        Graph<TV,TE> ans;
-        for(int i = 0; i < n; i++){
-            ans.insertVertex(names[i],data[i]);
-        }
-        vector<pair<TE,int>> edges;
-        vector<pair<int,int>> list_edges(cur_edge);
-        for(int i = 0; i < cur_edge; i++) edges.push_back({weight[i],i});
-
-        for(auto it:num_edges){
-            list_edges[it.second] = it.first;
-        }
-
-        sort(edges.begin(),edges.end());
-        int cont = 0;
-        for(int i = 0; i < cur_edge; i++){
-            int u = list_edges[ edges[i].second ].first, v = list_edges[ edges[i].second ].second;
-            if(uni(u,v)){
-                ans.createEdge(names[u],names[v],weight[ edges[i].first ]);
-                cont++;
-            }
-        }
-        if(cont < n-1) return Graph<TV,TE>(); 
-        return ans;
-
-    }
-
-    Graph<TV,TE> prim(TE inf){
-        if(is_directed) return Graph<TV,TE>(); 
-        Graph<TV,TE> ans;
-        int n = cur_vertex;
-        for(int i = 0; i < n; i++){
-            ans.insertVertex(names[i],data[i]);
-        }
-        vector<TE> min_dis(n,inf), min_ver(n,-1);
-        min_dis[0] = 0;
-        vector<pair<int,int>> list_edges(cur_edge);
-        vector<bool> used(cur_vertex);        
-        for(auto it:num_edges){
-            list_edges[it.second] = it.first;
-        }
-        set<pair<TE,int>> edges;
-        edges.insert({0,0});
-        for(int i = 0; i < n; i++){
-            if(edges.size() == 0){
-                return Graph<TV,TE>(); 
-            }
-            int u = edges.begin() -> second;
-            used[u] = true;
-            edges.erase(edges.begin());
-            if(min_ver[u] != -1 ){
-                ans.createEdge(names[u],names[min_ver[u]],min_dis[u]);
-            }
-            for(auto v:adj[u]){
-                if(!used[v.first] && weight[v.second] < min_dis[v.first] ){
-                    if(min_ver[v.second] != -1)
-                        edges.erase({min_dis[v.first],min_ver[v.first]});
-                    min_dis[v.first] = weight[v.second];
-                    min_ver[v.first] = u;
-                    edges.insert({min_dis[v.first],v.first});
-                }
-            }
-        }
-
-        return ans;
-    }
-
- 
 };
 
 #endif
