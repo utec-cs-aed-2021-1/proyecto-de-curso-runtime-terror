@@ -1,53 +1,41 @@
-#ifndef GRAPH_H
-#define GRAPH_H
+/*
+    Testeado con el problema de SPOJ : https://www.spoj.com/problems/MST/
 
+    Accepted
+
+*/
 #include <bits/stdc++.h>
-//#include <SFML/Graphics.hpp>
-#include "parser.h"
-
 using namespace std;
-using json = nlohmann::json;
-
-int scalar = 2;
-int centerx = 940;
-int centery = 450;
-
-template <typename T>
-T convert_to (const std::string &str) {
-    std::istringstream ss(str);
-    T num;
-    ss >> num;
-    return num;
-}
 
 template<typename TV, typename TE>
 class Graph{
 protected:
-    //sf::RenderWindow* window;
+//   sf::RenderWindow* window;
     int cur_vertex = 0, cur_edge = 0;
 
     vector<TV> data; // data[i] = data del i-esimo vertice
     vector<TE> weight; // weight[i] = peso de la i-esima arista 
     map< pair<int,int> , int> num_edges; // dado un par de vertices devuelve el numero de la arista
     vector<string> names;
-    unordered_map< string,int>  vertexes;  // dado el id devuelve el numero del vertice
+    unordered_map< string,int>  vertexes; // dado el id devuelve el numero del vertice
     vector< vector< pair<int,int> > > adj; // lista de adjacencia (numero vecino, id de la arista)
     bool is_directed = false;
 
 public:
-        
+    void size() {
+        cout << data.size() << endl;
+        cout << weight.size();
+    }
     bool is_directed2() {return is_directed;}
 
     template <typename VT,typename ET> friend vector<int> dfs_graph(Graph<VT,ET>& graph);
     template <typename VT,typename ET> friend vector<int> bfs_graph(Graph<VT,ET>& graph, int root);
-    template <typename VT,typename ET> friend vector<int> best_first_search(Graph<VT,ET>& graph, int root, int target);
 
     template <typename VT,typename ET> friend vector<ET> dijkstra(Graph<VT,ET>& graph, TE inf, int root);
-    template <typename VT,typename ET> friend vector<ET> bellman_ford(Graph<VT,ET>& graph, TE inf, int root);
     template <typename VT,typename ET> friend Graph<VT,ET> kruskal(Graph<VT,ET>& graph);
     template <typename VT,typename ET> friend Graph<VT,ET> prim(Graph<VT,ET>& graph, ET inf);
 
-    //Graph(sf::RenderWindow* wnd, bool directed = false ): window{wnd}{is_directed = directed;}
+//    Graph(/*sf::RenderWindow* wnd, */ bool directed = false ): /*window{wnd}*/{is_directed = directed;}
 
     TV getDataById(string id) {
         int index = vertexes[id];
@@ -71,9 +59,6 @@ public:
         return *this;
     }
 
-    TE dist_between(string& id1, string& id2) {
-
-    }
 
     bool insertVertex(const string& id, TV vertex){
         if(vertexes[id] != 0) return false;
@@ -152,6 +137,24 @@ public:
         };
         return cont == cur_vertex;
     }
+    int number_connected_components(){
+        if(is_directed) return false;
+        vector<bool> vis(cur_vertex,false);
+        int cont = 0,ans = 0;
+        function <void(int)> dfs = [&](int u){
+     
+            vis[u] = true;
+            for(auto v:adj[u]){
+                if(!vis[v.first]) dfs(v.first);
+            }
+            cont++;
+        };
+        for(int i = 0; i < cur_vertex; i++)
+            if(!vis[i]) ans++,dfs(i);
+        return ans; 
+    }
+
+
     bool isStronglyConnected() {
         if(!is_directed) return false;
         if(cur_vertex == 0) return true;
@@ -221,6 +224,7 @@ public:
         return vertexes.find(id) != vertexes.end();
     }
     void display() {
+        /*
         for(int i = 0; i < data.size(); ++i) {
             for (int j = 0; j < adj[i].size(); ++j) {
                 json temp1 = data[i];
@@ -240,8 +244,70 @@ public:
                               convert_to<double>(p["Latitude"].template get<string>()) * scalar+centery);
             window->draw(shape);
         }
+        */
     }
 
 };
 
-#endif
+template <typename VT,typename ET>
+Graph<VT,ET> kruskal(Graph<VT,ET>& graph){
+    if(graph.is_directed) return Graph<VT,ET>();
+    int n = graph.cur_vertex;
+    // DSU
+    vector<int> parent(n);
+    for(int i = 0; i < n; i++) parent[i] = i;
+    function<int(int)> find = [&](int u){
+        return (parent[u] == u? u: parent[u] = find(parent[u]));
+    };
+    function<bool(int,int)> uni = [&](int u,int v){
+        u = find(u), v = find(v);
+        if(u == v) return false;
+        parent[v] = u;
+        return true;
+    };
+    // END DSU
+    Graph<VT,ET> ans;
+    for(int i = 0; i < n; i++){
+        ans.insertVertex(graph.names[i],graph.data[i]);
+    }
+    vector<pair<ET,int>> edges;
+    vector<pair<int,int>> list_edges(graph.cur_edge);
+
+    for(auto it:graph.num_edges){
+        list_edges[it.second] = it.first;
+        edges.push_back({graph.weight[it.second],it.second});
+    }
+
+    sort(edges.begin(),edges.end());
+    int cont = 0;
+    long long answer = 0;
+    for(int i = 0; i < graph.cur_edge; i++){
+        int u = list_edges[ edges[i].second ].first, v = list_edges[ edges[i].second ].second;
+        if(uni(u,v)){
+   
+            answer += graph.weight[ edges[i].second];
+            ans.createEdge(graph.names[u],graph.names[v],graph.weight[ edges[i].first ]);
+            cont++;
+        }
+    }
+    return ans;
+
+}
+
+
+int main(){
+    ios_base::sync_with_stdio(false);cin.tie(NULL);
+    int n,m;
+    cin >> n >> m;
+    Graph<int,int> g;
+    for(int i = 1; i <= n; i++) g.insertVertex(to_string(i),i);
+    int u,v,w;
+    for(int i = 0; i < m ; i++){
+        cin >> u >> v >> w;
+        g.createEdge(to_string(u),to_string(v),w);
+    }
+    auto mst =  kruskal(g);
+
+
+    return 0;
+}
