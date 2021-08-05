@@ -38,8 +38,8 @@ public:
         
     bool is_directed2() {return is_directed;}
 
-    template <typename VT,typename ET> friend vector<int> dfs_graph(Graph<VT,ET>& graph);
-    template <typename VT,typename ET> friend vector<int> bfs_graph(Graph<VT,ET>& graph, int root);
+    template <typename VT,typename ET> friend vector<string> dfs_graph(Graph<VT,ET>& graph);
+    template <typename VT,typename ET> friend vector<string> bfs_graph(Graph<VT,ET>& graph, string root);
     template <typename VT,typename ET> friend vector<int> best_first_search(Graph<VT,ET>& graph, int root, int target);
     template <typename VT,typename ET> friend vector<vector<ET>> floyd_warshall(Graph<VT,ET>& graph);
     template <typename VT,typename ET> friend vector<ET> dijkstra(Graph<VT,ET>& graph, TE inf, int root);
