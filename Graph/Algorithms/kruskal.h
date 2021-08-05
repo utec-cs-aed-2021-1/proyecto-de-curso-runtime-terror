@@ -43,8 +43,8 @@ Graph<VT,ET> kruskal(Graph<VT,ET>& graph){
             cont++;
         }
     }
+    cout << answer << endl;
     return ans;
-
 }
 
 
