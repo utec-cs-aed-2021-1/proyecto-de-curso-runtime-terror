@@ -35,16 +35,13 @@ protected:
     bool is_directed = false;
 
 public:
-    void size() {
-        cout << data.size() << endl;
-        cout << weight.size();
-    }
+        
     bool is_directed2() {return is_directed;}
 
     template <typename VT,typename ET> friend vector<int> dfs_graph(Graph<VT,ET>& graph);
     template <typename VT,typename ET> friend vector<int> bfs_graph(Graph<VT,ET>& graph, int root);
-
-    template <typename VT,typename ET> friend vector<ET> dijkstra(Graph<VT,ET>& graph, TE inf, int root);
+    template <typename VT,typename ET> friend vector<vector<ET>> floyd_warshall(Graph<VT,ET>& graph);
+    template <typename VT,typename ET> friend vector<ET> dijkstra(Graph<VT,ET>& graph, ET inf, int root);
     template <typename VT,typename ET> friend Graph<VT,ET> kruskal(Graph<VT,ET>& graph);
     template <typename VT,typename ET> friend Graph<VT,ET> prim(Graph<VT,ET>& graph, ET inf);
 
@@ -72,6 +69,9 @@ public:
         return *this;
     }
 
+    TE dist_between(string& id1, string& id2) {
+
+    }
 
     bool insertVertex(const string& id, TV vertex){
         if(vertexes[id] != 0) return false;

@@ -8,8 +8,9 @@
 #include "Algorithms/dfs.h"
 #include "Algorithms/prim.h"
 #include "Algorithms/kruskal.h"
+#include "Algorithms/floyd_warshall.h"
 #include <limits>
-long double infinite = numeric_limits<double>::max();
+double infinite = numeric_limits<double>::max();
 using json = nlohmann::json;
 using namespace std;
 
@@ -32,13 +33,15 @@ int main(int argc, char *argv[]) {
     }
 
     */
-    //sf::RenderWindow window(sf::VideoMode(1920, 1080), "SFML works!");
+
     Graph<json,double> graph;
-    Parser parser(R"(C:\Users\Dom\Desktop\utec\4 ciclo\Algoritmos y estructura de datos\proyecto-de-curso-runtime-terror\Parser\Data\airports.json)");
+    Parser parser(R"(C:\Users\Dom\Desktop\utec\4 ciclo\Algoritmos y estructura de datos\proyecto-de-curso-runtime-terror\Parser\Data\pe.json)");
     parser.readJSON();
     parser.GraphMake(graph);
-    Graph<json, double> graph2(kruskal(graph));
-    graph2.size();
+    vector<vector<double>> vec;
+    vec = floyd_warshall(graph);
+
+
 
 
     //graph.display();
