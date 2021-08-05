@@ -2,7 +2,7 @@
 #define GRAPH_H
 
 #include <bits/stdc++.h>
-#include <SFML/Graphics.hpp>
+//#include <SFML/Graphics.hpp>
 #include "parser.h"
 
 using namespace std;
@@ -23,14 +23,14 @@ T convert_to (const std::string &str) {
 template<typename TV, typename TE>
 class Graph{
 protected:
-    sf::RenderWindow* window;
+    //sf::RenderWindow* window;
     int cur_vertex = 0, cur_edge = 0;
 
     vector<TV> data; // data[i] = data del i-esimo vertice
     vector<TE> weight; // weight[i] = peso de la i-esima arista 
     map< pair<int,int> , int> num_edges; // dado un par de vertices devuelve el numero de la arista
     vector<string> names;
-    unordered_map< string,int>  vertexes; // dado el id devuelve el numero del vertice
+    unordered_map< string,int>  vertexes;  // dado el id devuelve el numero del vertice
     vector< vector< pair<int,int> > > adj; // lista de adjacencia (numero vecino, id de la arista)
     bool is_directed = false;
 
@@ -43,12 +43,14 @@ public:
 
     template <typename VT,typename ET> friend vector<int> dfs_graph(Graph<VT,ET>& graph);
     template <typename VT,typename ET> friend vector<int> bfs_graph(Graph<VT,ET>& graph, int root);
+    template <typename VT,typename ET> friend vector<int> best_first_search(Graph<VT,ET>& graph, int root, int target);
 
     template <typename VT,typename ET> friend vector<ET> dijkstra(Graph<VT,ET>& graph, TE inf, int root);
+    template <typename VT,typename ET> friend vector<ET> bellman_ford(Graph<VT,ET>& graph, TE inf, int root);
     template <typename VT,typename ET> friend Graph<VT,ET> kruskal(Graph<VT,ET>& graph);
     template <typename VT,typename ET> friend Graph<VT,ET> prim(Graph<VT,ET>& graph, ET inf);
 
-    Graph(sf::RenderWindow* wnd, bool directed = false ): window{wnd}{is_directed = directed;}
+    //Graph(sf::RenderWindow* wnd, bool directed = false ): window{wnd}{is_directed = directed;}
 
     TV getDataById(string id) {
         int index = vertexes[id];
