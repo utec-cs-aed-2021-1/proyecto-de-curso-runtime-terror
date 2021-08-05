@@ -40,7 +40,7 @@ Graph<VT,ET> kruskal(Graph<VT,ET>& graph){
             cont++;
         }
     }
-    if(cont < n-1) return Graph<VT,ET>();
+    //if(cont < n-1) return Graph<VT,ET>();
     return ans;
 
 }
