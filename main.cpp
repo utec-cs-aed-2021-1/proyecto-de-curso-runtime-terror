@@ -14,6 +14,42 @@ double infinite = numeric_limits<double>::max();
 using json = nlohmann::json;
 using namespace std;
 
+void astar() {
+
+}
+
+void bellman_ford() {
+
+}
+
+void best_first_search() {
+
+}
+
+void bfs() {
+
+}
+
+void dfs() {
+
+}
+
+void dijkstra() {
+
+}
+
+void floyd_warshall() {
+
+}
+
+void kruskal() {
+
+}
+
+void prim() {
+    
+}
+
 int main(int argc, char *argv[]) {
     /*
     std::cout << "================================================" << std::endl;
@@ -40,6 +76,24 @@ int main(int argc, char *argv[]) {
     parser.GraphMake(graph);
     vector<vector<double>> vec;
     vec = floyd_warshall(graph);
+    int op;
+    do{
+        switch (op) {
+            case 1:
+
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+        }
+
+        break;
+
+    }while (op != 0);
 
 
 
