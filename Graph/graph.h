@@ -8,7 +8,7 @@
 using namespace std;
 using json = nlohmann::json;
 
-int scalar = 2;
+int scalar = 5;
 int centerx = 940;
 int centery = 450;
 
