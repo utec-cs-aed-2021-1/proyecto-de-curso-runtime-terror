@@ -42,8 +42,8 @@ public:
     template <typename VT,typename ET> friend vector<string> bfs_graph(Graph<VT,ET>& graph, string root);
     template <typename VT,typename ET> friend vector<int> best_first_search(Graph<VT,ET>& graph, int root, int target);
 
-    template <typename VT, typename ET> friend ET astar(Graph<VT,ET>& graph, vector<ET> heuristic, ET inf, int s , int t );
-    template <typename VT,typename ET> friend vector<ET> dijkstra(Graph<VT,ET>& graph, TE inf, int root);
+    template <typename VT, typename ET> friend Graph<VT,ET> astar(Graph<VT,ET>& graph, vector<ET> heuristic, ET inf, int s , int t );
+    template <typename VT,typename ET> friend Graph<VT,ET> dijkstra(Graph<VT,ET>& graph, TE inf, int root);
     template <typename VT,typename ET> friend vector<ET> bellman_ford(Graph<VT,ET>& graph, TE inf, int root);
     template <typename VT,typename ET> friend Graph<VT,ET> kruskal(Graph<VT,ET>& graph);
     template <typename VT,typename ET> friend Graph<VT,ET> prim(Graph<VT,ET>& graph, ET inf);
