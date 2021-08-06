@@ -2,13 +2,13 @@
 #define GRAPH_H
 
 #include <bits/stdc++.h>
-//#include <SFML/Graphics.hpp>
+#include <SFML/Graphics.hpp>
 #include "parser.h"
 
 using namespace std;
 using json = nlohmann::json;
 
-int scalar = 2;
+int scalar = 5;
 int centerx = 940;
 int centery = 450;
 
@@ -23,7 +23,7 @@ T convert_to (const std::string &str) {
 template<typename TV, typename TE>
 class Graph{
 protected:
-    //sf::RenderWindow* window;
+    sf::RenderWindow* window;
     int cur_vertex = 0, cur_edge = 0;
 
     vector<TV> data; // data[i] = data del i-esimo vertice
@@ -41,6 +41,7 @@ public:
     template <typename VT,typename ET> friend vector<string> dfs_graph(Graph<VT,ET>& graph);
     template <typename VT,typename ET> friend vector<string> bfs_graph(Graph<VT,ET>& graph, string root);
     template <typename VT,typename ET> friend vector<int> best_first_search(Graph<VT,ET>& graph, int root, int target);
+    template <typename VT,typename ET> friend vector<vector<ET>> floyd_warshall(Graph<VT,ET>& graph, ET inf, int root);
 
     template <typename VT, typename ET> friend Graph<VT,ET> astar(Graph<VT,ET>& graph, vector<ET> heuristic, ET inf, int s , int t );
     template <typename VT,typename ET> friend Graph<VT,ET> dijkstra(Graph<VT,ET>& graph, TE inf, int root);
@@ -48,7 +49,7 @@ public:
     template <typename VT,typename ET> friend Graph<VT,ET> kruskal(Graph<VT,ET>& graph);
     template <typename VT,typename ET> friend Graph<VT,ET> prim(Graph<VT,ET>& graph, ET inf);
 
-    //Graph(sf::RenderWindow* wnd, bool directed = false ): window{wnd}{is_directed = directed;}
+    Graph(sf::RenderWindow* wnd, bool directed = false ): window{wnd}{is_directed = directed;}
 
     TV getDataById(string id) {
         int index = vertexes[id];
@@ -72,9 +73,7 @@ public:
         return *this;
     }
 
-    TE dist_between(string& id1, string& id2) {
 
-    }
 
     bool insertVertex(const string& id, TV vertex){
         if(vertexes[id] != 0) return false;
