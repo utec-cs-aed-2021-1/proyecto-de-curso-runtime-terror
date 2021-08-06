@@ -33,7 +33,7 @@ Graph<VT,ET> dijkstra(Graph<VT,ET>& graph, ET inf, string ver){
         }
     }
     
-    for(int i = 0; i < cur_vertex; i++){
+    for(int i = 0; i < graph.cur_vertex; i++){
         if(i == root) continue;
         tree.createEdge(graph.names[i],graph.names[parent[i]],weight[i]);
     }

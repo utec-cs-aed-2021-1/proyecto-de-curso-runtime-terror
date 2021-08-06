@@ -109,3 +109,23 @@ void dGraphMake(DirectedGraph<string, double> &tempGraph); // Adds the parsed da
 
 
 > **PD:** Puntos extras sobre Evaluación Continua si se implementa una GUI.
+
+## Pruebas en un jurado externo
+### jurado:
+* https://www.spoj.com/problems/MST/
+
+![Alt text](Assets/prueba.jpg?raw=true "Title")
+
+## Pruebas con SFML
+### kruskal:
+![Alt text](Assets/kruslal.jpg?raw=true "Title")
+
+### dijkstra:
+![Alt text](Assets/dijkstra.jpg?raw=true "Title")
+
+### comprobar si el parser funciona:
+![Alt text](Assets/grafoairports.jpg?raw=true "Title")
+
+
+* nota: para ejecutar estos procedimientos debe descomentar y comentar en el main (especificado en el source code), ademas debe disponer de las librerias de SFML. 
+

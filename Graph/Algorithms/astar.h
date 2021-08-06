@@ -6,11 +6,11 @@
 template <typename VT,typename ET>
 Graph<VT,ET> astar(Graph<VT,ET>& graph, vector<ET> heuristic, ET inf, string s_ver , string t_ver ){
     while(heuristic.size() < graph.cur_vertex)
-            heuristic.push_back( rand()  % (inf/(graph.cur_vertex+1)) );
+            heuristic.push_back( rand()  %  int(inf/(graph.cur_vertex+1)) );
     vector<ET> dis(graph.cur_vertex);
     priority_queue< pair<ET,int> , vector< pair<ET,int> >, greater< pair<ET,int> > > q;
     for(int i = 0; i < graph.cur_vertex; i++) dis[i] = inf; // TIPO DE DATO?
-    int s = vertexes[s_ver], t = vertexes[t_ver];
+    int s = graph.vertexes[s_ver], t = graph.vertexes[t_ver];
     for(int i = 0; i < graph.cur_vertex; i++) dis[i] = inf; // TIPO DE DATO?
     vector<int> parent(graph.cur_vertex);
     vector<ET> weight(graph.cur_vertex);
@@ -19,7 +19,7 @@ Graph<VT,ET> astar(Graph<VT,ET>& graph, vector<ET> heuristic, ET inf, string s_v
     for(int i = 0; i < graph.cur_vertex; i++) 
         tree.insertVertex(graph.names[i],graph.data[i]);
     
-    int root = graph.vertexes[ver];
+    int root = graph.vertexes[s_ver];
 
     dis[s] = heuristic[s];
     q.push({dis[s],s});
@@ -40,7 +40,7 @@ Graph<VT,ET> astar(Graph<VT,ET>& graph, vector<ET> heuristic, ET inf, string s_v
         }
     }
 
-    for(int i = 0; i < cur_vertex; i++){
+    for(int i = 0; i < graph.cur_vertex; i++){
         if(i == root) continue;
         tree.createEdge(graph.names[i],graph.names[parent[i]],weight[i]);
     }
