@@ -23,30 +23,13 @@ void print_vector(vector<T>& vec) {
 }
 
 int main(int argc, char *argv[]) {
-    /*
-    std::cout << "================================================" << std::endl;
-    std::cout << "MENU GRAPH TESTER" << std::endl;
-    std::cout << "================================================" << std::endl;
-    //Tester::executeExamples();
-    // Tester::executeParser();
-    Graph<json,double> graph;
-    Parser parser(R"(C:\Users\Dom\Desktop\utec\4 ciclo\Algoritmos y estructura de datos\proyecto-de-curso-runtime-terror\Parser\Data\airports.json)");
-    parser.readJSON();
-    parser.GraphMake(graph);
-    vector<double> vec;
-    vec = graph.dijkstra(infinite,0);
-    cout << graph.density()<<endl;
-    for(auto &i : vec){
-        cout << i << ", ";
-    }
 
-    */
     sf::RenderWindow window(sf::VideoMode(1920, 1080), "Airports");
     Graph<json,double> graph(&window);
-    Parser parser(R"(C:\Users\Dom\Desktop\utec\4 ciclo\Algoritmos y estructura de datos\proyecto-de-curso-runtime-terror\Parser\Data\airports.json)");
+    Parser parser(R"(C:\Users\Dom\Desktop\utec\4 ciclo\Algoritmos y estructura de datos\proyecto-de-curso-runtime-terror\Parser\Data\airports.json)"); // puede cambiar airports por pe.json
     parser.readJSON();
     parser.GraphMake(graph);
-    /*
+    /* mostrar solo el grafo de aeropuertos
    graph.display();
    window.display();
 
@@ -61,7 +44,7 @@ int main(int argc, char *argv[]) {
 
    }
      */
-    /*
+    /* mostrar dijkstra
    Graph<json,double> minimun_tree(&window);
    vector<double> vec(18,0.0);
    minimun_tree = dijkstra(graph,infinite,"Bocas Del Toro");
@@ -79,7 +62,8 @@ int main(int argc, char *argv[]) {
    }
 
     */
-    /*
+
+    /*mostrar kruskal
     Graph<json,double> minimun_tree(&window);
     vector<double> vec(18,0.0);
     minimun_tree = kruskal(graph);
